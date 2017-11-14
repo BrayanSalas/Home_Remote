@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home Remote</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/4.5.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/4.5.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/4.5.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/4.5.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/4.5.0/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+	<link href=�css/movil.css� rel=�stylesheet� type=�text/css� media=�handheld, only screen and (max-device-width: 480px)� />
+	
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyBBLo8DDJTJyfxGbFsR-cY5wM8nweSWm_0",
+		authDomain: "home-remote-78d4a.firebaseapp.com",
+		databaseURL: "https://home-remote-78d4a.firebaseio.com",
+		projectId: "home-remote-78d4a",
+		storageBucket: "home-remote-78d4a.appspot.com",
+		messagingSenderId: "496387148520"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+     	
+		<script>
+		// Autentica al usuario
+		do{
+		var acceso = 1;
+		var usuario = prompt("Nombre de usuario");
+		var contraseña = prompt("Ingrese contraseña");
+			
+			if(usuario == "admin" && contraseña == "admin"){
+			acceso = 0;
+			alert("Bienvenido");
+			}
+			else{
+				alert("Acceso denegado, error en usuario o contraseña");
+			}
+
+		}while(acceso == 1);
+		</script>
+        
+        <style>
+          img{
+              max-width: 100%;
+          }
+          </style>
+  </head>
+  <body background="Piso.jpg">
+      <div class="container">
+    <div class="row">
+      <div class="col-xs-6 col-md-offset-3">
+          <picture> 
+          <source srcset="Banner.jpg 400w" media="(max-width: 366px)">
+          <source srcset="Banner.jpg 800w" media="(min-width: 550px)">
+            <img src="Banner.jpg">
+          </picture>
+          
+      </div>
+          </div>
+            </div>
+   <br>
+   <br>
+   <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-warning">
+          <div class="panel-heading">Luces de la casa</div>
+          <div class="panel-body">
+             <div class="checkbox">
+               <label>
+                <input type="checkbox" id="checkLed1">L&aacute;mpara Principal
+              </label>
+
+              <div class="checkbox">
+               <label>
+                <input type="checkbox" id="checkLed2">Sala
+              </label>
+			  
+			  			<div class="checkbox">
+               <label>
+                <input type="checkbox" id="checkLed3">Cocina
+              </label>
+                <div class="checkbox">
+                <label>
+                 <input type="checkbox" id="checkLed4">Jard&iacute;n
+             </label>
+                    
+				</div>
+             </div>
+          </div>
+        </div>      
+      </div>
+    </div>
+  </div>
+  
+ <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-danger">
+          <div class="panel-heading">Temperatura de la casa en grados</div>
+          <div class="panel-body">
+          <div id="Temperatura">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+        
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-info">
+          <div class="panel-heading">Estado del Ventilador</div>
+          <div class="panel-body">
+          <div id="Ventilador">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+	
+	<script>
+	var db = firebase.database().ref('home');
+	    
+	db.on('value', function(data){
+   console.log("data: ", data.val());
+        
+        document.getElementById("Temperatura").firstChild.nodeValue = data.val().temp;
+        
+        var aire = false;
+        if(data.val().ventilador == true){
+            aire = "Encendido";
+        }else if(data.val().ventilador == false){
+            aire = "Apagado";
+        }
+        document.getElementById("Ventilador").firstChild.nodeValue = aire;
+        
+        //PROGRAMACION PARA EL AIRE
+        if(data.val().temp > 25){
+            db.update({
+                ventilador:true
+            });
+        } else if(data.val().temp <= 25){
+            db.update({
+               ventilador:false 
+            });
+        }
+        
+        //VALORES VERIFICADOS PARA QUE SE CHECKEEN
+   $("#checkLed1").prop('checked', data.val().foco1);
+   $("#checkLed2").prop('checked', data.val().foco2);
+   $("#checkLed3").prop('checked', data.val().foco3);
+	});
+	$("#checkLed1").click(function(){
+	  var estado = $(this).is(':checked');
+	  db.update({
+		foco1:estado
+	  });
+	  	if(estado == true){
+	  alert("Encendido");
+	  }
+	  else{
+	  alert("Apagado");
+	  }
+	});
+	$("#checkLed2").click(function(){
+	  var estado = $(this).is(':checked');
+	  db.update({
+		foco2:estado
+	  });
+	  if(estado == true){
+	  alert("Encendido");
+	  }
+	  else{
+	  alert("Apagado");
+	  }
+	});
+	$("#checkLed3").click(function(){
+	  var estado = $(this).is(':checked');
+	  db.update({
+		foco3:estado
+	  });
+	  if(estado == true){
+	  alert("Encendido");
+	  }
+	  else{
+	  alert("Apagado");
+	  }
+	});
+    $("#checkLed4").click(function(){
+	  var estado = $(this).is(':checked');
+	  db.update({
+		foco4:estado,
+        foco5:estado
+	  });
+	  if(estado == true){
+	  alert("Encendido");
+	  }
+	  else{
+	  alert("Apagado");
+	  }
+	});
+    $("#ventilador").click(function(){
+	  var estado = $(this).is(':checked');
+	  db.update({
+		ventilador:estado
+	  });
+	  if(estado == true){
+	  alert("Encendido");
+	  }
+	  else{
+	  alert("Apagado");
+	  }
+	});
+	
+	</script>
+  </body>
+</html>
