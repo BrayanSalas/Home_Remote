@@ -36,16 +36,11 @@
 	</script>
      	
 		<script>
-        // Obtiene el usuario y contraseña de la base de datos
-		var db = firebase.database().ref('home');
-        db.on('value', function(data){
-        var user = data.val().user;
-        var pass = data.val().pass;    
         // Autentica al usuario
 		do{
 		var acceso = 1;
 		var usuario = prompt("Nombre de usuario");
-		var contraseña = prompt("Ingrese contraseña");
+		var contraseña = prompt("Ingrese contraseña");    
 			if(usuario == user && contraseña == pass){
 			acceso = 0;
 			alert("Bienvenido");
@@ -53,8 +48,9 @@
 			else{
 				alert("Acceso denegado, error en usuario o contraseña");
 			}
+                        
 		}while(acceso == 1);
-    });        
+
 		</script>
         
         <style>
