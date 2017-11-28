@@ -41,7 +41,6 @@
         db.on('value', function(data){
         var user = data.val().user;
         var pass = data.val().pass;    
-        });
         // Autentica al usuario
 		do{
 		var acceso = 1;
@@ -55,7 +54,7 @@
 				alert("Acceso denegado, error en usuario o contraseña");
 			}
 		}while(acceso == 1);
-            
+    });        
 		</script>
         
         <style>
